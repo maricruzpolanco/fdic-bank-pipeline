@@ -2,7 +2,6 @@ import requests
 from requests.exceptions import RequestException, HTTPError
 import json
 import logging
-import time
 import pprint as pp
 
 
@@ -36,7 +35,6 @@ endpoints = {
     }
 }
 
-# pp.pprint(endpoints)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -62,24 +60,27 @@ def fetch_fdic_data():
                     logging.warning(
                         f"Unexpected status code: {response.status_code}")
 
-                # print(response.base_url)
                 response.raise_for_status()
                 data = response.json()
+                total_record_count = data["meta"]["total"]
                 records = data.get("data", [])
+
+                all_records.extend([record['data'] for record in records])
 
                 logging.info(
                     f"Fetched {len(all_records)} records from {endpoint}")
-
-                if not records:
+                if len(all_records) >= total_record_count:
                     break
 
-                all_records.extend(records)
                 endpoint_info["params"]["offset"] += endpoint_info["params"]["limit"]
 
-                pp.pprint(records)
-
+            except HTTPError as http_err:
+                print(f"HTTP error occurred: {http_err}")
             except Exception as e:
                 print("An error has occurred with the request:", e)
+
+        logging.info(
+            f"Completed fetching {endpoint}: {len(all_records)} total records")
 
     return all_records
 
