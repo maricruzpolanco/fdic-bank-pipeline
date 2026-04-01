@@ -2,7 +2,6 @@ import requests
 from requests.exceptions import RequestException, HTTPError
 import json
 import logging
-import pprint as pp
 
 
 url = "https://api.fdic.gov/banks/"
@@ -40,6 +39,8 @@ logging.basicConfig(level=logging.INFO)
 
 
 def fetch_fdic_data():
+
+    all_data = {}
 
     for endpoint, endpoint_info in endpoints.items():
 
@@ -82,7 +83,7 @@ def fetch_fdic_data():
         logging.info(
             f"Completed fetching {endpoint}: {len(all_records)} total records")
 
-    return all_records
+        all_data[endpoint] = all_records
 
 
 fetch_fdic_data()
