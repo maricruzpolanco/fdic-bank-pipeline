@@ -46,6 +46,8 @@ def fetch_fdic_data():
 
         all_records = []
 
+        endpoint_info["params"]["offset"] = 0
+
         while True:
 
             try:
@@ -85,5 +87,8 @@ def fetch_fdic_data():
 
         all_data[endpoint] = all_records
 
+    return all_records
 
-fetch_fdic_data()
+
+if __name__ == "__main__":
+    fetch_fdic_data()
