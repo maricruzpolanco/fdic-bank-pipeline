@@ -87,7 +87,7 @@ def fetch_fdic_data():
 
         all_data[endpoint] = all_records
 
-    return all_records
+    return all_data
 
 
 if __name__ == "__main__":
