@@ -211,3 +211,6 @@ fdic_client_3.py
 fdic_client_2.py
 claude_code_script.py
 all_data.json
+test_connection_S3.py
+test_connections_snow.py
+all_data_institutions.json
