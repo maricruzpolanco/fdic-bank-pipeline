@@ -205,3 +205,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+fdic_client_draft.py
+fdic_client_3.py
+fdic_client_2.py
+claude_code_script.py
+all_data.json
