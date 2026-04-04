@@ -2,6 +2,10 @@
 import json
 from datetime import datetime
 import pytz
+import boto3
+import logging
+from dotenv import load_dotenv
+import os
 
 
 with open('all_data.json', 'r') as file:
@@ -9,20 +13,31 @@ with open('all_data.json', 'r') as file:
 
 # all_data = fetch_fdic_data()
 
-records_list = []
+load_dotenv()
 
 
 def s3_uploader(all_data):
+
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+    )
+
     est = pytz.timezone('US/Eastern')
-    upload_date = datetime.now(est).date()
-    print(upload_date)
+    current_date = datetime.now(est).date()
+    upload_date = current_date.strftime("%Y/%m/%d")
 
-    for key, value in all_data.items():
-        records_list.append({"endpoint": key, "fields": value})
-        print(records_list)
+    for key in all_data:
 
-    # with open("end.json", "w") as json_file:
-    #     json_dump()
+        record = all_data[key]
+        record_json = json.dumps(record)
+
+        s3.put_object(
+            Bucket="fdic-bank-pipeline-raw",
+            Key=f"{key}/{upload_date}/{key}_raw.json",
+            Body=record_json
+        )
 
 
 s3_uploader(all_data)
