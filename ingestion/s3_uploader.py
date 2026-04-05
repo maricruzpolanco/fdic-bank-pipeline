@@ -1,4 +1,3 @@
-# from fdic_client import fetch_fdic_data
 import json
 from datetime import datetime
 import pytz
@@ -7,13 +6,7 @@ import logging
 import botocore
 from dotenv import load_dotenv
 import os
-from botocore.exceptions import ClientError
 
-
-with open('all_data.json', 'r') as file:
-    all_data = json.load(file)
-
-# all_data = fetch_fdic_data()
 
 load_dotenv()
 
@@ -61,7 +54,7 @@ def s3_uploader(all_data):
 
         try:
 
-            response = s3.put_object(
+            s3.put_object(
                 Bucket=bucket,
                 Key=s3_key,
                 Body=record_json
@@ -76,11 +69,3 @@ def s3_uploader(all_data):
         except Exception as e:
             logging.error(f"Unexpected error loading '{s3_key}': {e}")
             raise
-
-
-def main():
-    s3_uploader(all_data)
-
-
-if __name__ == "__main__":
-    main()
